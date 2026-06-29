@@ -9,7 +9,7 @@ from neural_network import forward_prop
 # 1. Force the app to use the full width of the screen
 st.set_page_config(layout="wide")
 
-st.title("🔢 Handwritten Digit Classifier")
+st.title("🔢 Handwritten Digit Classifier - Shreeraj Chimanpure")
 st.write("Draw a digit from 0-9 in the canvas below and see the neural network predict it!")
 
 
