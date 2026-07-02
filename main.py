@@ -17,7 +17,6 @@ st.write("Draw a digit from 0-9 in the canvas below and see the neural network p
 
 # --- LOAD THE PYTORCH MODEL ---
 # st.cache_resource ensures we only load the model once to keep the app fast
-@st.cache_resource
 def load_model():
     try:
         model = SmallCNN()
