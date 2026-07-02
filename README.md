@@ -1,32 +1,48 @@
-# MNIST Digit Classification via Custom NumPy Neural Network
+# 🔢 MNIST Digit Classification via PyTorch Convolutional Neural Network (CNN)
+🔗 **Live Interactive Demo:** [Try the Streamlit App Here](https://colornumbers-bgraqqriwknfgppodyrrcv.streamlit.app/)
 
-https://colornumbers-bgraqqriwknfgppodyrrcv.streamlit.app/ 
+## 📝 Overview
+This repository contains an interactive, web-deployed deep learning application designed to classify handwritten digits. Originally built as a scratch NumPy Multi-Layer Perceptron, the project has been upgraded to a **Convolutional Neural Network (CNN) powered by PyTorch**. 
 
-## Overview
-This repository contains a complete, scratch-built Artificial Neural Network (ANN) designed to classify the MNIST handwritten digit dataset. The primary objective of this project is to implement deep learning fundamentals—specifically forward propagation, backpropagation, and gradient descent—without relying on high-level machine learning frameworks such as TensorFlow or PyTorch.
+The main objective of this architecture shift is to solve a classic machine learning challenge: bridging the performance gap between static dataset testing and dynamic, real-world user drawings on a web interface. By implementing a CNN alongside a rigorous preprocessing and data-augmentation pipeline, the system achieves excellent spatial invariance and high inference accuracy on live user input.
 
-## Mathematical Implementation
-The network is implemented entirely in Python using the NumPy library for matrix operations. The learning process relies on the following mathematical components:
+---
 
-* **Forward Propagation:** Matrix multiplication of input vectors with weight matrices, followed by the addition of bias vectors.
-* **Activation Functions:** * **ReLU (Rectified Linear Unit):** Applied to the hidden layer to introduce non-linearity.
-    * **Softmax:** Applied to the output layer to normalize raw logits into a valid probability distribution.
-* **Backpropagation:** The network calculates the gradient of the loss function with respect to the weights using the chain rule. Weights are updated iteratively via Full Batch Gradient Descent.
+## 🧠 Network Architecture
+The model transitions the image data from a raw grid into high-level spatial features using a compact, efficient CNN pipeline:
 
-## Network Architecture
-The model follows a standard feedforward multi-layer perceptron (MLP) structure:
-* **Input Layer:** 784 neurons, corresponding to the flattened 28x28 pixel input image.
-* **Hidden Layer:** 128 neurons.
-* **Output Layer:** 10 neurons, representing classes 0 through 9.
+* **Input Layer:** Handles a $1 \times 28 \times 28$ grayscale image tensor (reshaped from the user's drawing canvas).
+* **Convolutional Layer (`Conv2d`):** 16 filters with a $3 \times 3$ kernel size and padding of 1. This layer scans the canvas to extract local spatial features like edges, intersections, and curves, regardless of their position.
+* **Activation:** ReLU (Rectified Linear Unit) to introduce non-linearity.
+* **Max Pooling Layer (`MaxPool2d`):** A $2 \times 2$ window with a stride of 2 that downsamples the feature maps from $28 \times 28$ to $14 \times 14$, selecting only the most dominant spatial activations.
+* **Fully Connected Layer (`Linear`):** Flattens the $16 \times 14 \times 14$ feature map into 128 dense nodes with a final ReLU activation.
+* **Output Layer:** 10 nodes mapping directly to digits 0-9.
 
-**Performance:** The model achieves approximately 93.25% accuracy on the standard MNIST test set after 500 training iterations.
+---
 
-## Inference and Image Preprocessing
-The project includes a Streamlit-based graphical user interface that allows users to draw digits on a canvas for real-time inference.
+## ⚙️ Training & Live Data Augmentation
+To ensure the network is resilient against diverse handwriting styles, stroke scales, and off-center drawings, the training pipeline incorporates a live **Data Augmentation** routine before batch ingestion:
 
-To bridge the gap between raw user input and the model's expected data distribution, the application mathematically replicates the original MNIST dataset preprocessing pipeline. Upon receiving a user's drawn input, the application:
-1. Isolates the strict bounding box of the non-zero pixels.
-2. Scales the bounding box such that the maximum dimension is exactly 20 pixels, utilizing Lanczos resampling to preserve data integrity.
-3. Calculates the required offset and translates the scaled digit onto the center of a 28x28 zero-matrix.
+1.  **Random Shifts:** Translates the images dynamically by $\pm2$ pixels vertically and horizontally using `scipy.ndimage.shift` to simulate variable placement on the canvas.
+2.  **Random Zooms:** Applies a dynamic scaling factor between 0.9x and 1.1x using `scipy.ndimage.zoom` to simulate variations in writing pressure and pen stroke sizes.
+3.  **Mini-Batch Optimization:** The network is optimized using the **Adam Optimizer** and **Cross-Entropy Loss**, processing data in mini-batches of 64 images for rapid convergence and superior generalization compared to full-batch gradient descent.
 
-This precise geometric alignment ensures that the spatial distribution of the real-time input matches the distribution of the original training data, yielding robust and accurate real-world predictions.
+---
+
+## 🎨 Real-Time Inference & Image Preprocessing
+When a user draws a digit in the Streamlit UI, the application bridges the gap between the messy $450 \times 450$ canvas and the expected $28 \times 28$ model resolution. The custom preprocessing pipeline performs the following geometric operations:
+
+1.  **Bounding Box Isolation:** Finds the precise outermost boundaries of the non-zero (drawn) pixels, stripping away dead margins.
+2.  **Aspect-Ratio Scaling:** Scales the cropped drawing so its largest dimension is exactly 20 pixels, using bilinear/Lanczos resampling to match the anti-aliased look of the MNIST dataset.
+3.  **Center-Mass Pasting:** Pastes the scaled digit precisely into the mathematical center of a brand new $28 \times 28$ black canvas.
+4.  **Tensor Normalization:** Normalizes the pixel intensities to a `[0.0, 1.0]` range and reformats the array into a 4D tensor `(1, 1, 28, 28)` required for PyTorch CNN inference.
+
+---
+
+## 🚀 How to Run Locally
+
+### 1. Clone the Repository & Install Dependencies
+```bash
+git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+cd your-repo-name
+pip install torch numpy scipy pillow streamlit streamlit-drawable-canvas
