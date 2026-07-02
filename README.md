@@ -1,5 +1,5 @@
 # 🔢 MNIST Digit Classification via PyTorch Convolutional Neural Network (CNN)
-🔗 **Live Interactive Demo:** [Try the Streamlit App Here]("https://firelegacy04-digit-prediction-main-yjv0u7.streamlit.app/")
+🔗 **Live Interactive Demo:** https://firelegacy04-digit-prediction-main-yjv0u7.streamlit.app/
 
 ## 📝 Overview
 This repository contains an interactive, web-deployed deep learning application designed to classify handwritten digits. Originally built as a scratch NumPy Multi-Layer Perceptron, the project has been upgraded to a **Convolutional Neural Network (CNN) powered by PyTorch**. 
