@@ -2,3 +2,4 @@ streamlit
 streamlit-drawable-canvas
 Pillow
 numpy
+scipy
